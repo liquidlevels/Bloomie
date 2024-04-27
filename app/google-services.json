@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1015559805706",
+    "project_id": "bloomie-c2584",
+    "storage_bucket": "bloomie-c2584.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1015559805706:android:044005bc8820040751f8f3",
+        "android_client_info": {
+          "package_name": "com.example.bloomie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn24d2k6-X8sWV9D9A6fwtj-Zr_mnhKKQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
