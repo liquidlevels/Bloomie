@@ -4,32 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#2FAD40"
     tools:context=".MainActivity">
 
 
-    <TextView
-        android:id="@+id/id_temperatura"
-        android:layout_width="108dp"
-        android:layout_height="53dp"
-        android:text="TextView"
+    <ImageView
+        android:id="@+id/logoFlores"
+        android:layout_width="273dp"
+        android:layout_height="495dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.221"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.256" />
+        app:layout_constraintVertical_bias="0.194"
+        app:srcCompat="@drawable/logo" />
 
-    <TextView
-        android:id="@+id/constraintlayout"
-        android:layout_width="100dp"
-        android:layout_height="52dp"
-        android:text="TextView"
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="335dp"
+        android:layout_height="477dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.79"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.256" />
+        app:layout_constraintVertical_bias="0.303"
+        app:srcCompat="@drawable/logosolo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
