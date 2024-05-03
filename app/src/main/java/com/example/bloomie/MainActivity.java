@@ -2,19 +2,15 @@ package com.example.bloomie;
 
 import android.content.Intent;
 import android.os.Bundle;
-<<<<<<< HEAD
 import android.util.Log;
 import android.widget.TextView;
-=======
 import android.os.Handler;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
->>>>>>> 8e225413d35f56153fc7099132cad9e7c5c6226e
 
 import androidx.appcompat.app.AppCompatActivity;
-<<<<<<< HEAD
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 
@@ -25,8 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import androidx.core.view.WindowInsetsCompat;
-=======
->>>>>>> 8e225413d35f56153fc7099132cad9e7c5c6226e
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -39,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
         setContentView(R.layout.activity_main);
-<<<<<<< HEAD
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.id_suelo), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -69,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-=======
 
       Animation animacion1= AnimationUtils.loadAnimation(this, R.anim.desplazamiento_arriba);
       Animation animacion2= AnimationUtils.loadAnimation(this, R.anim.desplazamiento_abajo);
@@ -88,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
               finish();
           }
       }, 4000);
->>>>>>> 8e225413d35f56153fc7099132cad9e7c5c6226e
 
     }
 }
