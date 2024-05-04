@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         // Write a message to the database
         id_temperatura = findViewById(R.id.id_temperatura);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = FirebaseDatabase.getInstance().getReference().child("message");
+        myRef = FirebaseDatabase.getInstance().getReference().child("DHT11");
 
         // Lee desde la base de datos
         myRef.addValueEventListener(new ValueEventListener() {
@@ -48,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Este método se llama una vez con el valor inicial y nuevamente
                 // cada vez que los datos en esta ubicación se actualizan.
-                String value = dataSnapshot.getValue(String.class);
+                Float  value = dataSnapshot.child("humidity").child("value").getValue(Float.class);
                 Log.d(TAG, "Value is: " + value);
-                id_temperatura.setText(value);
+                id_temperatura.setText(value+"");
             }
 
             @Override
