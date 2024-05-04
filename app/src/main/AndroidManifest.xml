@@ -19,9 +19,6 @@
             android:name=".loginActivity"
             android:exported="false" />
         <activity
-            android:name=".login"
-            android:exported="false" />
-        <activity
             android:name=".splash_activity"
             android:exported="true">
             <intent-filter>

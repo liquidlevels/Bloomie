@@ -27,6 +27,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity extends AppCompatActivity {
 
     private TextView id_temperatura;
+    private DatabaseReference myRef;
 
     private static final String TAG = "MainActivity"; // Define tu etiqueta de registro
     @Override
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         // Write a message to the database
         id_temperatura = findViewById(R.id.id_temperatura);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
+        myRef = FirebaseDatabase.getInstance().getReference().child("message");
 
         // Lee desde la base de datos
         myRef.addValueEventListener(new ValueEventListener() {
