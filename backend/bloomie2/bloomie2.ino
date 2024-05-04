@@ -54,7 +54,7 @@ const int VAL_HIGH = 1024; // DRY
 const int VAL_LOW = 800; // WET
 
 // Device Location config
-String device_location = "DHT11";
+String device_location = "";
 
 // Firebase Realtime Database Object
 FirebaseData fbdo;
@@ -66,8 +66,10 @@ FirebaseAuth auth;
 FirebaseConfig config;
 
 // Firebase database path
-String databasePath = "DHT11";
+String dht11_path = "DHT11";
+String databasePath = "";
 String ground_humidity_path = "GROUND_HUMIDITY";
+
 // Firebase Unique Identifier
 String fuid = "";
 
@@ -86,15 +88,12 @@ bool isAuthenticated = false;
 // Variables to hold sensor readings
 float temperature = 24.7;
 float humidity = 60;
+int ground_humidity = 0;
 
 // JSON object to hold updated sensor values to be sent to firebase
 FirebaseJson temperature_json;
 FirebaseJson humidity_json;
 FirebaseJson ground_humidity_json;
-
-void setupPins() {
-  
-}
 
 void Wifi_Init() {
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -130,7 +129,7 @@ void firebase_init() {
         isAuthenticated = true;
 
         // Set the database path where updates will be loaded for this device
-        databasePath = "/" + device_location;
+        databasePath = "/";
         fuid = auth.token.uid.c_str();
     }
     else
@@ -144,6 +143,26 @@ void firebase_init() {
 
     // Initialise firebase service
     Firebase.begin(&config, &auth);
+}
+
+void groundhumidity_init(){
+  
+  //groundhumidity_begin();
+  ground_humidity_json.add("name", "Humidity");
+  ground_humidity_json.add("value", ground_humidity);
+
+  String jsonStr;
+  ground_humidity_json.toString(jsonStr, true);
+  Serial.println(jsonStr);
+}
+
+void groundhumidity_begin(){
+  float valorADC = analogRead(GROUND_HUMIDITY_PIN);
+  int res = (((valorADC - VAL_LOW) * 100) / (VAL_HIGH - VAL_LOW));
+  int fim = 100 - res;
+  if(fim >= 100) fim = 100;
+  if(fim <= 0) fim = 0;
+  ground_humidity = fim;
 }
 
 void dhtt11_init(){
@@ -171,18 +190,18 @@ void dhtt11_init(){
   String jsonStr2;
   humidity_json.toString(jsonStr2, true);
   Serial.println(jsonStr2);
-
 }
 
 void setup() {
   // Initialise serial communication for local diagnostics
   Serial.begin(115200);
-  //Ground humidity capture starts
-  pinMode(GROUND_HUMIDITY_PIN,INPUT);
   // Initialise Connection with location WiFi
   Wifi_Init();
   // Initialise firebase configuration and signup anonymously
   firebase_init();
+  //Ground humidity capture starts
+  pinMode(GROUND_HUMIDITY_PIN,INPUT);
+  groundhumidity_init();
   // Initialise DHTT11 module
   dhtt11_init();
 }
@@ -193,18 +212,19 @@ void updateSensorReadings(){
 
   humidity = dht.readHumidity();
   temperature = dht.readTemperature();
-
   // Check if any reads failed and exit early (to try again).
-  if (isnan(temperature) || isnan(humidity)) {
+  if (isnan(temperature) || isnan(humidity) || isnan(ground_humidity)) {
     Serial.println(F("Failed to read from DHT sensor!"));
     return;
   }
 
   Serial.printf("Temperature reading: %.2f \n", temperature);
   Serial.printf("Humidity reading: %.2f \n", humidity);
+  Serial.printf("Ground Humidity reading: %d \n", ground_humidity);
 
   temperature_json.set("value", temperature);
   humidity_json.set("value", humidity);
+  ground_humidity_json.set("value", ground_humidity);
 }
 
 void uploadSensorData() {
@@ -213,8 +233,9 @@ void uploadSensorData() {
       elapsedMillis = millis();
 
       updateSensorReadings();
-      String temperature_node = databasePath + "/temperature";  
-      String humidity_node = databasePath + "/humidity"; 
+      String temperature_node = databasePath + dht11_path + "/temperature";  
+      String humidity_node = databasePath + dht11_path + "/humidity"; 
+      String ground_humidity_node = databasePath + ground_humidity_path + "/ground_humidity";
       //String temperature_node = "/temperature";  
       //String humidity_node = "/humidity"; 
 
@@ -255,21 +276,16 @@ void uploadSensorData() {
           Serial.println("------------------------------------");
           Serial.println();
       }
-
-      float valorADC = analogRead(GROUND_HUMIDITY_PIN);
-      int res = (((valorADC - VAL_LOW) * 100) / (VAL_HIGH - VAL_LOW));
-      int fim = 100 - res;
-      String ground_humidity_node = ground_humidity_path + "/humidity";
-      if(fim >= 100) fim = 100;
-      if(fim <= 0) fim = 0;
-      ground_humidity_json.add("name", "Humidity");
-      ground_humidity_json.add("value", fim);
-      ground_humidity_json.set("value", fim);
-        
+      
       if(Firebase.pushJSON(fbdo,ground_humidity_node.c_str(), ground_humidity_json)){
-        Serial.print("\tSoil Moisture: ");
-        Serial.print(fim);
-        Serial.print("%");
+        Serial.println("PASSED");
+        Serial.println("PATH: " + fbdo.dataPath());
+        Serial.println("TYPE: " + fbdo.dataType());
+        Serial.println("ETag: " + fbdo.ETag());
+        Serial.print("VALUE: ");
+        printResult(fbdo); //see addons/RTDBHelper.h
+        Serial.println("------------------------------------");
+        Serial.println();
       }
       else
       {
