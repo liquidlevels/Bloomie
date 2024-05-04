@@ -4,32 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@drawable/monitoreo"
     tools:context=".MainActivity">
 
 
     <TextView
-        android:id="@+id/id_temperatura"
-        android:layout_width="108dp"
-        android:layout_height="53dp"
-        android:text="TextView"
+        android:id="@+id/id_suelo"
+        android:layout_width="54dp"
+        android:layout_height="39dp"
+        android:text="-"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.221"
+        app:layout_constraintHorizontal_bias="0.904"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.256" />
+        app:layout_constraintVertical_bias="0.764" />
 
     <TextView
-        android:id="@+id/constraintlayout"
-        android:layout_width="100dp"
-        android:layout_height="52dp"
-        android:text="TextView"
+        android:id="@+id/id_humedad"
+        android:layout_width="54dp"
+        android:layout_height="32dp"
+        android:text="-"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.79"
+        app:layout_constraintHorizontal_bias="0.929"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.256" />
+        app:layout_constraintVertical_bias="0.58" />
+
+    <TextView
+        android:id="@+id/id_temperatura"
+        android:layout_width="89dp"
+        android:layout_height="32dp"
+        android:text="-"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.155"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.597" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
