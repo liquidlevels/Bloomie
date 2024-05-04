@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference dht11;
     private DatabaseReference ground_humidity;
 
-
+yy
     Button btn_logout;
     private DatabaseReference myRef;
 
@@ -93,14 +93,14 @@ public class MainActivity extends AppCompatActivity {
 
         ground_humidity.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //Float  values = dataSnapshot.child("GROUND_HUMIDITY").child("value").getValue(Float.class);
-                // Log.d(TAG, "Value is: " + values);
-                //id_suelo.setText(values+"");
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Float  values = dataSnapshot.child("ground_humidity").child("value").getValue(Float.class);
+                Log.d(TAG, "Value is: " + values);
+                id_suelo.setText(values+"");
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onCancelled(DatabaseError error) {
                 // Error de lectura de datos
                 Log.w(TAG, "Failed to read value.", error.toException());
 
