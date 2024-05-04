@@ -33,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference dht11;
     private DatabaseReference ground_humidity;
 
+
+    private String userID;
+
+
+
     Button btn_logout;
     private DatabaseReference myRef;
 
@@ -106,6 +111,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+    }
+
+    private void obtnerId(){
 
     }
 }

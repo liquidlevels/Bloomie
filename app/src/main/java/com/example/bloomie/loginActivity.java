@@ -56,6 +56,14 @@ public class loginActivity extends AppCompatActivity {
                 }
             }
         });
+
+        btn_registrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(loginActivity.this, registro_activity.class));
+            }
+        });
     }
 
     private void loginUser(String emailUser, String passUser){
@@ -74,6 +82,14 @@ public class loginActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(loginActivity.this,"Error al iniciar Sesion",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        btn_registrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(loginActivity.this, registro_activity.class));
             }
         });
     }
