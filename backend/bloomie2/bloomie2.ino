@@ -21,6 +21,9 @@
 #define DHTPIN 4 
 #define DHTTYPE DHT11 
 
+//Analog pin to ground humidity sensor
+#define GROUND_HUMIDITY_PIN 0
+
 // Initialize DHT sensor
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -46,6 +49,10 @@ DHT dht(DHTPIN, DHTTYPE);
 // Your Firebase Realtime database URL
 #define DATABASE_URL "https://bloomie-c2584-default-rtdb.firebaseio.com/" 
 
+// Constants
+const int VAL_HIGH = 1024; // DRY
+const int VAL_LOW = 800; // WET
+
 // Device Location config
 String device_location = "DHT11";
 
@@ -61,6 +68,7 @@ FirebaseConfig config;
 // Firebase database path
 String databasePath = "DHT11";
 
+String ground_humidity_path = "GROUND_HUMIDITY";
 // Firebase Unique Identifier
 String fuid = "";
 
@@ -83,6 +91,11 @@ float humidity = 60;
 // JSON object to hold updated sensor values to be sent to firebase
 FirebaseJson temperature_json;
 FirebaseJson humidity_json;
+FirebaseJson ground_humidity_json;
+
+void setupPins() {
+  
+}
 
 void Wifi_Init() {
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -165,6 +178,8 @@ void dhtt11_init(){
 void setup() {
   // Initialise serial communication for local diagnostics
   Serial.begin(115200);
+  //Ground humidity capture starts
+  pinMode(GROUND_HUMIDITY_PIN,INPUT);
   // Initialise Connection with location WiFi
   Wifi_Init();
   // Initialise firebase configuration and signup anonymously
@@ -247,4 +262,29 @@ void uploadSensorData() {
 
 void loop() {
   uploadSensorData();
+
+  float valorADC = analogRead(GROUND_HUMIDITY_PIN);
+  Serial.print("\tRaw Value: ");
+  Serial.print(valorADC);
+  Serial.println(" ");
+  
+  int res = (((valorADC - VAL_LOW) * 100) / (VAL_HIGH - VAL_LOW));
+  int fim = 100 - res;
+  String ground_humidity_node = ground_humidity_path + "/humidity";
+  if(fim >= 100) fim = 100;
+  if(fim <= 0) fim = 0;
+    // Checking if value is valid
+    if(!isnan(fim)) {
+      // Publishing data to the Firebase database and displaying the data via serial
+      ground_humidity_json.add("name", "Humidity");
+      ground_humidity_json.add("value", fim);
+      ground_humidity_json.set("value", fim);
+      Firebase.pushJSON(fbdo,ground_humidity_node.c_str(), ground_humidity_json);
+      Serial.print("\tSoil Moisture: ");
+      Serial.print(fim);
+      Serial.print("%");
+    } else {
+      Serial.println("Error capturing moisture!");
+      Serial.println("Error when trying to send data to Firebase");
+    }
 }
