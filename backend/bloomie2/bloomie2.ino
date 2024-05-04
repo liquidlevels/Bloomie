@@ -148,7 +148,7 @@ void firebase_init() {
 void groundhumidity_init(){
   
   //groundhumidity_begin();
-  ground_humidity_json.add("name", "Humidity");
+  ground_humidity_json.add("name", "Ground Humidity");
   ground_humidity_json.add("value", ground_humidity);
 
   String jsonStr;
@@ -156,7 +156,7 @@ void groundhumidity_init(){
   Serial.println(jsonStr);
 }
 
-void groundhumidity_begin(){
+void groundhumidity(){
   float valorADC = analogRead(GROUND_HUMIDITY_PIN);
   int res = (((valorADC - VAL_LOW) * 100) / (VAL_HIGH - VAL_LOW));
   int fim = 100 - res;
@@ -209,11 +209,11 @@ void setup() {
 void updateSensorReadings(){
   Serial.println("------------------------------------");
   Serial.println("Reading Sensor data ...");
-
+  groundhumidity();
   humidity = dht.readHumidity();
   temperature = dht.readTemperature();
   // Check if any reads failed and exit early (to try again).
-  if (isnan(temperature) || isnan(humidity) || isnan(ground_humidity)) {
+  if (isnan(temperature) || isnan(humidity)) {
     Serial.println(F("Failed to read from DHT sensor!"));
     return;
   }
@@ -277,7 +277,7 @@ void uploadSensorData() {
           Serial.println();
       }
       
-      if(Firebase.pushJSON(fbdo,ground_humidity_node.c_str(), ground_humidity_json)){
+      if(Firebase.setJSON(fbdo,ground_humidity_node.c_str(), ground_humidity_json)){
         Serial.println("PASSED");
         Serial.println("PATH: " + fbdo.dataPath());
         Serial.println("TYPE: " + fbdo.dataType());
