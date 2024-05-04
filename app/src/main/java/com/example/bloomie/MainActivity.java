@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference dht11;
     private DatabaseReference ground_humidity;
 
-yy
     Button btn_logout;
     private DatabaseReference myRef;
 
