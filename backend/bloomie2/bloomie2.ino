@@ -67,7 +67,6 @@ FirebaseConfig config;
 
 // Firebase database path
 String databasePath = "DHT11";
-
 String ground_humidity_path = "GROUND_HUMIDITY";
 // Firebase Unique Identifier
 String fuid = "";
@@ -255,38 +254,34 @@ void uploadSensorData() {
           Serial.println("REASON: " + fbdo.errorReason());
           Serial.println("------------------------------------");
           Serial.println();
-      } 
+      }
 
+      float valorADC = analogRead(GROUND_HUMIDITY_PIN);
+      int res = (((valorADC - VAL_LOW) * 100) / (VAL_HIGH - VAL_LOW));
+      int fim = 100 - res;
+      String ground_humidity_node = ground_humidity_path + "/humidity";
+      if(fim >= 100) fim = 100;
+      if(fim <= 0) fim = 0;
+      ground_humidity_json.add("name", "Humidity");
+      ground_humidity_json.add("value", fim);
+      ground_humidity_json.set("value", fim);
+        
+      if(Firebase.pushJSON(fbdo,ground_humidity_node.c_str(), ground_humidity_json)){
+        Serial.print("\tSoil Moisture: ");
+        Serial.print(fim);
+        Serial.print("%");
+      }
+      else
+      {
+          Serial.println("FAILED");
+          Serial.println("REASON: " + fbdo.errorReason());
+          Serial.println("------------------------------------");
+          Serial.println();
+      } 
+      
     }
 }
 
 void loop() {
   uploadSensorData();
-
-  float valorADC = analogRead(GROUND_HUMIDITY_PIN);
-  
-  if (millis() - elapsedMillis > update_interval && isAuthenticated && Firebase.ready())
-  {
-    elapsedMillis = millis();
-    int res = (((valorADC - VAL_LOW) * 100) / (VAL_HIGH - VAL_LOW));
-    int fim = 100 - res;
-    String ground_humidity_node = ground_humidity_path + "/humidity";
-    if(fim >= 100) fim = 100;
-    if(fim <= 0) fim = 0;
-      // Checking if value is valid
-        // Publishing data to the Firebase database and displaying the data via serial
-    ground_humidity_json.add("name", "Humidity");
-    ground_humidity_json.add("value", fim);
-    ground_humidity_json.set("value", fim);
-        
-        if(Firebase.pushJSON(fbdo,ground_humidity_node.c_str(), ground_humidity_json)){
-          Serial.print("\tSoil Moisture: ");
-          Serial.print(fim);
-          Serial.print("%");
-        }
-       //else {
-        //Serial.println("Error capturing moisture!");
-        //Serial.println("Error when trying to send data to Firebase");
-      //}
-  }
 }
