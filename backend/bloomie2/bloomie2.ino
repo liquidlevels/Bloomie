@@ -22,7 +22,7 @@
 #define DHTTYPE DHT11 
 
 //Analog pin to ground humidity sensor
-#define GROUND_HUMIDITY_PIN 0
+#define GROUND_HUMIDITY_PIN 36
 
 // Initialize DHT sensor
 DHT dht(DHTPIN, DHTTYPE);
@@ -157,13 +157,13 @@ void groundhumidity_init(){
   ground_humidity_json.toString(jsonStr, true);
   Serial.println(jsonStr);
 }
-
+/*
 void groundhumidity(){
   int analogValue = analogRead(GROUND_HUMIDITY_PIN);
   ground_humidity = analogValue;
   Serial.println(ground_humidity);
 }
-
+*/
 void dhtt11_init(){
   dht.begin();
 
@@ -208,7 +208,11 @@ void setup() {
 void updateSensorReadings(){
   Serial.println("------------------------------------");
   Serial.println("Reading Sensor data ...");
-  groundhumidity();
+  //groundhumidity();
+  int analogValue = analogRead(GROUND_HUMIDITY_PIN);
+  ground_humidity = analogValue;
+  Serial.println(ground_humidity);
+  
   humidity = dht.readHumidity();
   temperature = dht.readTemperature();
   // Check if any reads failed and exit early (to try again).
