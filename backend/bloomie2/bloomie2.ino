@@ -86,9 +86,11 @@ int count = 0;
 bool isAuthenticated = false;
 
 // Variables to hold sensor readings
-float temperature = 24.7;
-float humidity = 60;
-int ground_humidity = 0;
+//float temperature = 24.7;
+float temperature = 2;
+//float humidity = 60;
+float humidity = 30;
+int ground_humidity = 20;
 
 // JSON object to hold updated sensor values to be sent to firebase
 FirebaseJson temperature_json;
@@ -157,12 +159,9 @@ void groundhumidity_init(){
 }
 
 void groundhumidity(){
-  float valorADC = analogRead(GROUND_HUMIDITY_PIN);
-  int res = (((valorADC - VAL_LOW) * 100) / (VAL_HIGH - VAL_LOW));
-  int fim = 100 - res;
-  if(fim >= 100) fim = 100;
-  if(fim <= 0) fim = 0;
-  ground_humidity = fim;
+  int analogValue = analogRead(GROUND_HUMIDITY_PIN);
+  ground_humidity = analogValue;
+  Serial.println(ground_humidity);
 }
 
 void dhtt11_init(){
