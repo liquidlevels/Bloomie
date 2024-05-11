@@ -33,8 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference dht11;
     private DatabaseReference ground_humidity;
 
+    private DatabaseReference name;
 
-    private String userID;
+
+    private TextView userID;
 
 
 
@@ -57,10 +59,12 @@ public class MainActivity extends AppCompatActivity {
         id_temperatura = findViewById(R.id.id_temperatura);
         id_humedad = findViewById(R.id.id_humedad);
         id_suelo = findViewById(R.id.id_suelo);
+        userID = findViewById(R.id.idUser);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         dht11 = FirebaseDatabase.getInstance().getReference().child("DHT11");
         ground_humidity = FirebaseDatabase.getInstance().getReference().child("GROUND_HUMIDITY");
-
+        name = FirebaseDatabase.getInstance().getReference().child("Users");
+        String id = mAuth.getCurrentUser().getUid();
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +75,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        name.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Este método se llama una vez con el valor inicial y nuevamente
+
+                String  value = dataSnapshot.child(id).child("name").getValue(String.class);
+                Log.d(TAG, "Value is: " + value);
+                userID.setText(value+"");
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         // Lee desde la base de datos
         dht11.addValueEventListener(new ValueEventListener() {
             @Override
@@ -115,7 +135,5 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void obtnerId(){
 
-    }
 }

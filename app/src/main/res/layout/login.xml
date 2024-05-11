@@ -56,7 +56,7 @@
         android:layout_width="256dp"
         android:layout_height="47dp"
         android:ems="10"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:hint="Contraseña"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
