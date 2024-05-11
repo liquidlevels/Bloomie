@@ -199,11 +199,11 @@ void setup() {
   Wifi_Init();
   // Initialise firebase configuration and signup anonymously
   firebase_init();
+  // Initialise DHTT11 module
+  dhtt11_init();
   //Ground humidity capture starts
   pinMode(GROUND_HUMIDITY_PIN,INPUT);
   groundhumidity_init();
-  // Initialise DHTT11 module
-  dhtt11_init();
 }
 
 void updateSensorReadings(){
@@ -241,13 +241,13 @@ void uploadSensorData() {
 
       if (Firebase.setJSON(fbdo, temperature_node.c_str(), temperature_json))
       {
-          Serial.println("PASSED");
+          //Serial.println("PASSED");
           Serial.println("PATH: " + fbdo.dataPath());
-          Serial.println("TYPE: " + fbdo.dataType());
-          Serial.println("ETag: " + fbdo.ETag());
+          //Serial.println("TYPE: " + fbdo.dataType());
+          //Serial.println("ETag: " + fbdo.ETag());
           Serial.print("VALUE: ");
           printResult(fbdo); //see addons/RTDBHelper.h
-          Serial.println("------------------------------------");
+          //Serial.println("------------------------------------");
           Serial.println();
       }
       else
@@ -260,13 +260,13 @@ void uploadSensorData() {
 
       if (Firebase.setJSON(fbdo, humidity_node.c_str(), humidity_json))
       {
-          Serial.println("PASSED");
+          //Serial.println("PASSED");
           Serial.println("PATH: " + fbdo.dataPath());
-          Serial.println("TYPE: " + fbdo.dataType());
-          Serial.println("ETag: " + fbdo.ETag());
+          //Serial.println("TYPE: " + fbdo.dataType());
+          //Serial.println("ETag: " + fbdo.ETag());
           Serial.print("VALUE: ");
           printResult(fbdo); //see addons/RTDBHelper.h
-          Serial.println("------------------------------------");
+          //Serial.println("------------------------------------");
           Serial.println();
       }
       else
@@ -278,10 +278,10 @@ void uploadSensorData() {
       }
       
       if(Firebase.setJSON(fbdo,ground_humidity_node.c_str(), ground_humidity_json)){
-        Serial.println("PASSED");
+        //Serial.println("PASSED");
         Serial.println("PATH: " + fbdo.dataPath());
-        Serial.println("TYPE: " + fbdo.dataType());
-        Serial.println("ETag: " + fbdo.ETag());
+        //Serial.println("TYPE: " + fbdo.dataType());
+        //Serial.println("ETag: " + fbdo.ETag());
         Serial.print("VALUE: ");
         printResult(fbdo); //see addons/RTDBHelper.h
         Serial.println("------------------------------------");
