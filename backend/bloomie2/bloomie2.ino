@@ -83,7 +83,7 @@ void Wifi_Init() {
   while (WiFi.status() != WL_CONNECTED)
   {
       Serial.print(".");
-      delay(300);
+      delay(1000);//1 second
   }
   Serial.println();
   Serial.print("Connected with IP: ");
@@ -135,13 +135,13 @@ void groundhumidity_init(){
   ground_humidity_json.toString(jsonStr, true);
   Serial.println(jsonStr);
 }
-/*
+///*
 void groundhumidity(){
   int analogValue = analogRead(GROUND_HUMIDITY_PIN);
   ground_humidity = analogValue;
   Serial.println(ground_humidity);
 }
-*/
+//*/
 void dhtt11_init(){
   dht.begin();
 
@@ -178,11 +178,12 @@ void setup() {
 void updateSensorReadings(){
   Serial.println("------------------------------------");
   Serial.println("Reading Sensor data ...");
-  //groundhumidity();
+  groundhumidity();
+  /*
   int analogValue = analogRead(GROUND_HUMIDITY_PIN);
   ground_humidity = analogValue;
   Serial.println(ground_humidity);
-  
+  */
   humidity = dht.readHumidity();
   temperature = dht.readTemperature();
   // Check if any reads failed and exit early (to try again).
