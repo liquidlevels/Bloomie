@@ -67,6 +67,7 @@ float humidity = 0;
 int ground_humidity = 0;
 String string_month = "";
 String string_day = "";
+String string_time = "";
 
 // Firebase database path
 String dht11_path = "dht11";
@@ -164,8 +165,9 @@ void getCurrentDate(){
     strftime(hour, sizeof(hour), "%H", &timeinfo);
     strftime(minute, sizeof(minute), "%M", &timeinfo);
     strftime(second, sizeof(second), "%S", &timeinfo);
-    string_day = String(day);
-    string_month = String(month);
+    string_day = "/" + String(day);
+    string_month = "/" + String(month);
+    string_time = "/" + String(hour) + ":" + String(minute) + ":" + String(second);
   }
 }
 
@@ -231,9 +233,9 @@ void uploadSensorData() {
       elapsed_millis = millis();
 
       updateSensorReadings();
-      String temperature_node = databasePath + dht11_path + "/" + string_month + "/temperature";  
-      String humidity_node = databasePath + dht11_path + "/" + string_month + "/humidity"; 
-      String ground_humidity_node = databasePath + ground_humidity_path + "/" + string_month + "/ground_humidity";
+      String temperature_node = databasePath + dht11_path + string_month + string_day + string_time + "/temperature";  
+      String humidity_node = databasePath + dht11_path + string_month + string_day + string_time + "/humidity"; 
+      String ground_humidity_node = databasePath + ground_humidity_path + string_month + string_day + string_time + "/ground_humidity";
       if (Firebase.pushJSON(fbdo, temperature_node.c_str(), temperature_json))
       {
           Serial.println("PATH: " + fbdo.dataPath());
