@@ -236,7 +236,7 @@ void uploadSensorData() {
       String temperature_node = databasePath + dht11_path + string_month + string_day + string_time + "/temperature";  
       String humidity_node = databasePath + dht11_path + string_month + string_day + string_time + "/humidity"; 
       String ground_humidity_node = databasePath + ground_humidity_path + string_month + string_day + string_time + "/ground_humidity";
-      if (Firebase.pushJSON(fbdo, temperature_node.c_str(), temperature_json))
+      if (Firebase.setJSON(fbdo, temperature_node.c_str(), temperature_json))
       {
           Serial.println("PATH: " + fbdo.dataPath());
           Serial.print("VALUE: ");
@@ -251,7 +251,7 @@ void uploadSensorData() {
           Serial.println();
       }
 
-      if (Firebase.pushJSON(fbdo, humidity_node.c_str(), humidity_json))
+      if (Firebase.setJSON(fbdo, humidity_node.c_str(), humidity_json))
       {
           Serial.println("PATH: " + fbdo.dataPath());
           Serial.print("VALUE: ");
@@ -266,7 +266,7 @@ void uploadSensorData() {
           Serial.println();
       }
       
-      if(Firebase.pushJSON(fbdo,ground_humidity_node.c_str(), ground_humidity_json)){
+      if(Firebase.setJSON(fbdo,ground_humidity_node.c_str(), ground_humidity_json)){
         Serial.println("PATH: " + fbdo.dataPath());
         Serial.print("VALUE: ");
         printResult(fbdo); //see addons/RTDBHelper.h
