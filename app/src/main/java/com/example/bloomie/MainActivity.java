@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.view.WindowManager;
+import android.os.Handler;
 
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,10 +30,20 @@ import com.google.firebase.database.ValueEventListener;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+import java.time.LocalDateTime;
+import java.util.Calendar;
+
+
+
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     FirebaseAuth mAuth;
+
 
     private Spinner id_tipo;
     private TextView id_temperatura;
+
+    private TextView horaText;
+
     private TextView id_humedad;
     private TextView id_suelo;
     private DatabaseReference dht11;
@@ -48,9 +59,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Button btn_logout;
     private DatabaseReference myRef;
 
-
-
-
+    private  Handler handler = new Handler();
     private static final String TAG = "MainActivity"; // Define tu etiqueta de registro
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         mAuth = FirebaseAuth.getInstance();
         // Write a message to the database
+        horaText = findViewById(R.id.horaText);
         id_temperatura = findViewById(R.id.id_temperatura);
         id_humedad = findViewById(R.id.id_humedad);
         id_suelo = findViewById(R.id.id_suelo);
@@ -88,6 +98,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         ground_humidity = FirebaseDatabase.getInstance().getReference().child("GROUND_HUMIDITY");
         name = FirebaseDatabase.getInstance().getReference().child("Users");
         String id = mAuth.getCurrentUser().getUid();
+
+        handler.postDelayed(updateDateTimeRunnable, 1000);
+
+        int[] dateTime = getCurrentDateTime();
+        int month = dateTime[0];
+        int day = dateTime[1];
+        int hour = dateTime[2];
+        int minute = dateTime[3];
+        int second = dateTime[4];
 
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,10 +182,46 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    private Runnable updateDateTimeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            int[] dateTime = getCurrentDateTime();
+            int hour = dateTime[2];
+            int minute = dateTime[3];
+            int second = dateTime[4];
+
+            // Formatear la hora actual en una cadena de texto
+            String formattedDateTime = String.format("%02d:%02d:%02d", hour, minute, second);
+
+            // Actualizar el TextView con la hora actual
+            horaText.setText(formattedDateTime);
+
+            // Programar la próxima actualización del TextView
+            handler.postDelayed(this, 1000); // Actualizar cada segundo
+
+        }
+    };
+
+    public static int[] getCurrentDateTime() {
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH) + 1; // Sumamos 1 porque en Calendar, enero es 0
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+
+        return new int[]{month, day, hour, minute, second};
+
     }
 }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
