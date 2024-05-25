@@ -29,24 +29,22 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.core.view.WindowInsetsCompat;
 
-<<<<<<< HEAD
 import java.time.LocalDateTime;
 import java.util.Calendar;
 
 
 
-public class MainActivity extends AppCompatActivity {
-=======
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
->>>>>>> Yuli
+
     FirebaseAuth mAuth;
 
-<<<<<<< HEAD
+
     private TextView horaText;
-=======
+
     private Spinner id_tipo;
     private TextView id_temperatura;
->>>>>>> Yuli
+
     private TextView id_humedad;
     private TextView id_suelo;
     private DatabaseReference dht11;
@@ -58,18 +56,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView userID;
 
 
-
     Button btn_logout;
     private DatabaseReference myRef;
 
-<<<<<<< HEAD
-    private  Handler handler = new Handler();
-=======
 
+    private Handler handler = new Handler();
 
-
->>>>>>> Yuli
     private static final String TAG = "MainActivity"; // Define tu etiqueta de registro
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         name = FirebaseDatabase.getInstance().getReference().child("Users");
         String id = mAuth.getCurrentUser().getUid();
 
-<<<<<<< HEAD
+
         handler.postDelayed(updateDateTimeRunnable, 1000);
 
         int[] dateTime = getCurrentDateTime();
@@ -117,15 +111,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         int hour = dateTime[2];
         int minute = dateTime[3];
         int second = dateTime[4];
-=======
->>>>>>> Yuli
+
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Aquí puedes agregar el código para cerrar sesión
                 mAuth.signOut();
                 finish();
-                startActivity(new Intent( MainActivity.this, loginActivity.class));
+                startActivity(new Intent(MainActivity.this, loginActivity.class));
             }
         });
 
@@ -134,14 +127,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Este método se llama una vez con el valor inicial y nuevamente
 
-                String  value = dataSnapshot.child(id).child("name").getValue(String.class);
+                String value = dataSnapshot.child(id).child("name").getValue(String.class);
                 Log.d(TAG, "Value is: " + value);
-                userID.setText(value+"");
-<<<<<<< HEAD
+                userID.setText(value + "");
 
-
-=======
->>>>>>> Yuli
             }
 
             @Override
@@ -155,13 +144,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Este método se llama una vez con el valor inicial y nuevamente
 
-                Float  value = dataSnapshot.child("temperature").child("value").getValue(Float.class);
+                Float value = dataSnapshot.child("temperature").child("value").getValue(Float.class);
                 Log.d(TAG, "Value is: " + value);
-                id_temperatura.setText(value+"");
+                id_temperatura.setText(value + "");
 
-                Float  valueh = dataSnapshot.child("humidity").child("value").getValue(Float.class);
+                Float valueh = dataSnapshot.child("humidity").child("value").getValue(Float.class);
                 Log.d(TAG, "Value is: " + valueh);
-                id_humedad.setText(valueh+"");
+                id_humedad.setText(valueh + "");
 
             }
 
@@ -175,9 +164,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         ground_humidity.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Float  values = dataSnapshot.child("ground_humidity").child("value").getValue(Float.class);
+                Float values = dataSnapshot.child("ground_humidity").child("value").getValue(Float.class);
                 Log.d(TAG, "Value is: " + values);
-                id_suelo.setText(values+"");
+                id_suelo.setText(values + "");
             }
 
             @Override
@@ -201,7 +190,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-<<<<<<< HEAD
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+
     private Runnable updateDateTimeRunnable = new Runnable() {
         @Override
         public void run() {
@@ -231,10 +225,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         int second = calendar.get(Calendar.SECOND);
 
         return new int[]{month, day, hour, minute, second};
-=======
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
 
->>>>>>> Yuli
     }
+
 }

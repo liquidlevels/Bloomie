@@ -45,7 +45,13 @@
         app:layout_constraintHorizontal_bias="0.155"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.597" />
+        app:layout_constraintVertical_bias="0.597" /><![CDATA[
+
+    =======
+        app:layout_constraintVertical_bias="0.976" />
+>>>>>>> Yuli
+
+    ]]>
 
     <Button
         android:id="@+id/btn_logout"
@@ -55,14 +61,10 @@
         android:text="Cerrar Sesion"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.974"
+        app:layout_constraintHorizontal_bias="0.891"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-<<<<<<< HEAD
-        app:layout_constraintVertical_bias="0.994" />
-=======
         app:layout_constraintVertical_bias="0.976" />
->>>>>>> Yuli
 
     <TextView
         android:id="@+id/idUser"
@@ -83,10 +85,10 @@
         android:layout_height="34dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.977"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.355" />
+        app:layout_constraintVertical_bias="0.053" />
 
     <Spinner
         android:id="@+id/id_tipo"
