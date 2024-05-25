@@ -8,6 +8,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.view.WindowManager;
 
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -22,12 +28,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.core.view.WindowInsetsCompat;
 
-
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     FirebaseAuth mAuth;
-    private TextView id_temperatura;
 
+    private Spinner id_tipo;
+    private TextView id_temperatura;
     private TextView id_humedad;
     private TextView id_suelo;
     private DatabaseReference dht11;
@@ -44,12 +49,30 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference myRef;
 
 
+
+
     private static final String TAG = "MainActivity"; // Define tu etiqueta de registro
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
+        // Encuentra el Spinner en el layout por su id
+        Spinner id_tipo = findViewById(R.id.id_tipo);
+
+        // Crea un ArrayAdapter usando el array de cadenas definido en strings.xml
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.spinner_items, android.R.layout.simple_spinner_item);
+
+        // Especifica el layout para el menú desplegable del Spinner
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Establece el adaptador en el Spinner
+        id_tipo.setAdapter(adapter);
+
+        // Agrega un listener al Spinner para manejar las selecciones
+        id_tipo.setOnItemSelectedListener(this);
 
         // Después de inflar el layout, puedes obtener la referencia al botón de logout
         btn_logout = findViewById(R.id.btn_logout);
@@ -65,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         ground_humidity = FirebaseDatabase.getInstance().getReference().child("GROUND_HUMIDITY");
         name = FirebaseDatabase.getInstance().getReference().child("Users");
         String id = mAuth.getCurrentUser().getUid();
+
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 String  value = dataSnapshot.child(id).child("name").getValue(String.class);
                 Log.d(TAG, "Value is: " + value);
                 userID.setText(value+"");
-
             }
 
             @Override
@@ -114,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         ground_humidity.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -129,11 +151,22 @@ public class MainActivity extends AppCompatActivity {
                 Log.w(TAG, "Failed to read value.", error.toException());
 
             }
+
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Maneja la selección del elemento del Spinner
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                Toast.makeText(MainActivity.this, "Selected: " + selectedItem, Toast.LENGTH_SHORT).show();
+            }
         });
+    }
 
-
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
     }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
+    }
 }
