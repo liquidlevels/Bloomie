@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">bloomie</string>
+    <string-array name="spinner_items">
+        <item>Tipo planta</item>
+        <item>Planta Xerófita</item>
+        <item>Planta Higrófita</item>
+    </string-array>
 </resources>
+
+
