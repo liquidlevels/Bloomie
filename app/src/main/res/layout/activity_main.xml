@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/monitoreoo"
+    android:background="@drawable/pmonitoreo"
     tools:context=".MainActivity">
 
 
@@ -13,23 +13,23 @@
         android:layout_width="54dp"
         android:layout_height="39dp"
         android:text="-"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.904"
+        app:layout_constraintHorizontal_bias="0.882"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.764" />
+        app:layout_constraintVertical_bias="0.763" />
 
     <TextView
         android:id="@+id/id_humedad"
         android:layout_width="54dp"
         android:layout_height="32dp"
         android:text="-"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.929"
+        app:layout_constraintHorizontal_bias="0.915"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.58" />
@@ -39,7 +39,7 @@
         android:layout_width="89dp"
         android:layout_height="32dp"
         android:text="-"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.155"
@@ -51,14 +51,18 @@
         android:id="@+id/btn_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#2CB34A"
+        android:backgroundTint="#4b6016"
         android:text="Cerrar Sesion"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.974"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+<<<<<<< HEAD
         app:layout_constraintVertical_bias="0.994" />
+=======
+        app:layout_constraintVertical_bias="0.976" />
+>>>>>>> Yuli
 
     <TextView
         android:id="@+id/idUser"
@@ -83,5 +87,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.355" />
+
+    <Spinner
+        android:id="@+id/id_tipo"
+        android:layout_width="137dp"
+        android:layout_height="42dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.113"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.968" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
