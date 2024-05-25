@@ -17,21 +17,18 @@
 //Analog pin to ground humidity sensor
 #define GROUND_HUMIDITY_PIN 36
 
+//Values for irrigation system
+#define MIN_HUMIDITY 1638
+#define MAX_HUMIDITY 2457
+
+//Digital pin connected to Relay Module
+#define RELAY_PIN 5
+
 // Initialize DHT sensor
 DHT dht(DHTPIN, DHTTYPE);
 
-//MICASA
-//#define WIFI_SSID "Totalplay-C3AA-5G"
-//#define WIFI_PASSWORD "C3AA5AEFbJYcHgvZ"
-
-//#define WIFI_SSID "TOTALPLAY_A8D35F_2.4"
-//#define WIFI_PASSWORD "FZT4101C4T"
-
-#define WIFI_SSID "dogfucker"
-#define WIFI_PASSWORD "holaquetal"
-
-//#define WIFI_SSID "WiFi.ITE 2.4"
-//#define WIFI_PASSWORD ""
+#define WIFI_SSID "ITE?"
+#define WIFI_PASSWORD "albatro123"
 
 // Your Firebase Project Web API Key
 #define API_KEY "AIzaSyBn24d2k6-X8sWV9D9A6fwtj-Zr_mnhKKQ"
@@ -44,6 +41,7 @@ const long gmt_offset_sec = -28800;//gmt -8 (local)
 const int daylight_offset_sec = 3600;
 struct tm timeinfo;
 char day[20];
+char dayofmonth[3];
 char month[20];
 char hour[3];
 char minute[3];
@@ -67,6 +65,7 @@ float humidity = 0;
 int ground_humidity = 0;
 String string_month = "";
 String string_day = "";
+String string_day_of_month = "";
 String string_time = "";
 
 // Firebase database path
@@ -161,11 +160,12 @@ void getCurrentDate(){
     Serial.println("Failed to obtain time");
   } else {
     strftime(day, sizeof(day), "%A", &timeinfo);
+    strftime(dayofmonth, sizeof(dayofmonth), "%d", &timeinfo);
     strftime(month, sizeof(month), "%B", &timeinfo);
     strftime(hour, sizeof(hour), "%H", &timeinfo);
     strftime(minute, sizeof(minute), "%M", &timeinfo);
     strftime(second, sizeof(second), "%S", &timeinfo);
-    string_day = "/" + String(day);
+    string_day = "/" + String(day) + " " + String(dayofmonth);
     string_month = "/" + String(month);
     string_time = "/" + String(hour) + ":" + String(minute) + ":" + String(second);
   }
@@ -188,6 +188,22 @@ void dhtt11_init(){
   Serial.println(jsonStr2);
 }
 
+void irrigationSystem(){
+  groundhumidity();
+  float current_humidity = ground_humidity;
+
+  if(current_humidity < MIN_HUMIDITY){
+    Serial.println("ta seco");
+    digitalWrite(RELAY_PIN, HIGH);
+    delay(2000);
+    digitalWrite(RELAY_PIN, LOW);
+  } else if(current_humidity <= MAX_HUMIDITY){
+    Serial.println("ta bien");
+  } else {
+    Serial.println("???");
+  }
+}
+
 void setup() {
   // Initialise serial communication for local diagnostics
   Serial.begin(115200);
@@ -202,6 +218,8 @@ void setup() {
   //Ground humidity capture starts
   pinMode(GROUND_HUMIDITY_PIN,INPUT);
   groundhumidity_init();
+  //Relay pin starts
+  pinMode(RELAY_PIN, OUTPUT);
 }
 
 void updateSensorReadings(){
@@ -233,9 +251,12 @@ void uploadSensorData() {
       elapsed_millis = millis();
 
       updateSensorReadings();
-      String temperature_node = databasePath + dht11_path + string_month + string_day + string_time + "/temperature";  
-      String humidity_node = databasePath + dht11_path + string_month + string_day + string_time + "/humidity"; 
-      String ground_humidity_node = databasePath + ground_humidity_path + string_month + string_day + string_time + "/ground_humidity";
+      String temperature_node = databasePath + dht11_path + "/temperature";
+      String humidity_node = databasePath + dht11_path + "/humidity";
+      String ground_humidity_node = databasePath + ground_humidity_path + "/ground_humidity";
+      //String temperature_node = databasePath + dht11_path + string_month + string_day + string_time;  
+      //String humidity_node = databasePath + dht11_path + string_month + string_day + string_time; 
+      //String ground_humidity_node = databasePath + ground_humidity_path + string_month + string_day + string_time;
       if (Firebase.setJSON(fbdo, temperature_node.c_str(), temperature_json))
       {
           Serial.println("PATH: " + fbdo.dataPath());
