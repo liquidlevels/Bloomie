@@ -93,8 +93,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         id_suelo = findViewById(R.id.id_suelo);
         userID = findViewById(R.id.idUser);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        dht11 = FirebaseDatabase.getInstance().getReference().child("DHT11");
-        ground_humidity = FirebaseDatabase.getInstance().getReference().child("GROUND_HUMIDITY");
+        dht11 = FirebaseDatabase.getInstance().getReference().child("dht11");
+        ground_humidity = FirebaseDatabase.getInstance().getReference().child("ground_humidity");
         name = FirebaseDatabase.getInstance().getReference().child("Users");
         String id = mAuth.getCurrentUser().getUid();
         handler.postDelayed(updateDateTimeRunnable, 1000);
