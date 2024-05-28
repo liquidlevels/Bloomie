@@ -27,15 +27,6 @@
 // Initialize DHT sensor
 DHT dht(DHTPIN, DHTTYPE);
 
-#define WIFI_SSID "ITE?"
-#define WIFI_PASSWORD "albatro123"
-
-// Your Firebase Project Web API Key
-#define API_KEY "AIzaSyBn24d2k6-X8sWV9D9A6fwtj-Zr_mnhKKQ"
-
-// Your Firebase Realtime database URL
-#define DATABASE_URL "https://bloomie-c2584-default-rtdb.firebaseio.com/" 
-
 const char* ntp_server = "pool.ntp.org";
 const long gmt_offset_sec = -28800;//gmt -8 (local)
 const int daylight_offset_sec = 3600;
