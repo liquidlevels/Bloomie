@@ -4,6 +4,7 @@
 #include "DHT.h"
 #include <driver/adc.h>
 #include "time.h"
+#include "Credentials.h"
 
 //Provide the token generation process info.
 #include "addons/TokenHelper.h"
@@ -120,7 +121,7 @@ void firebase_init() {
     }
     else {
     
-        Serial.printf("Failed, %s\n", config.signer.signupError.message.c_str());
+        Serial.printf("Failed connection to Firebase, %s\n", config.signer.signupError.message.c_str());
         isAuthenticated = false;
     }
 
@@ -179,22 +180,25 @@ void dhtt11_init(){
   Serial.println(jsonStr2);
 }
 
+/*
 void irrigationSystem(){
   groundhumidity();
   float current_humidity = ground_humidity;
 
-  if(current_humidity < MIN_HUMIDITY){
+  if(current_humidity <= MIN_HUMIDITY){
     Serial.println("ta seco");
     digitalWrite(RELAY_PIN, HIGH);
     delay(2000);
     digitalWrite(RELAY_PIN, LOW);
-  } else if(current_humidity <= MAX_HUMIDITY){
+  } else if(current_humidity > MIN_HUMIDITY && current_humidity <= MAX_HUMIDITY){
     Serial.println("ta bien");
+  } else if(current_humidity > MAX_HUMIDITY){
+    Serial.println("noo, ta muy humedo, se pueden podrir mis raices:c");
   } else {
-    Serial.println("???");
+    Serial.println("algo anda mal con el sistema de riego");
   }
 }
-
+*/
 void setup() {
   // Initialise serial communication for local diagnostics
   Serial.begin(115200);
@@ -218,22 +222,27 @@ void updateSensorReadings(){
   Serial.println("Reading Sensor data ...");
   groundhumidity();
   getCurrentDate();
+  //irrigationSystem();
   humidity = dht.readHumidity();
   temperature = dht.readTemperature();
   // Check if any reads failed and exit early (to try again).
   if (isnan(temperature) || isnan(humidity)) {
     Serial.println(F("Failed to read from DHT sensor!"));
     return;
+  } else {
+    Serial.printf("Temperature reading: %.2f \n", temperature);
+    Serial.printf("Humidity reading: %.2f \n", humidity);
+    temperature_json.set("value", temperature);
+    humidity_json.set("value", humidity);
   }
-
-  Serial.printf("Temperature reading: %.2f \n", temperature);
-  Serial.printf("Humidity reading: %.2f \n", humidity);
-  Serial.printf("Ground Humidity reading: %d \n", ground_humidity);
-  Serial.println(string_month);
-  Serial.println(string_day);
-  temperature_json.set("value", temperature);
-  humidity_json.set("value", humidity);
-  ground_humidity_json.set("value", ground_humidity);
+  
+  if(isnan(ground_humidity)){
+    Serial.println(F("Failed to read from Ground Humidity sensor"));
+    return;
+  } else{
+    Serial.printf("Ground Humidity reading: %d \n", ground_humidity);
+    ground_humidity_json.set("value", ground_humidity);
+  }
 }
 
 void uploadSensorData() {
@@ -242,12 +251,12 @@ void uploadSensorData() {
       elapsed_millis = millis();
 
       updateSensorReadings();
-      String temperature_node = databasePath + dht11_path + "/temperature";
-      String humidity_node = databasePath + dht11_path + "/humidity";
-      String ground_humidity_node = databasePath + ground_humidity_path + "/ground_humidity";
-      //String temperature_node = databasePath + dht11_path + string_month + string_day + string_time;  
-      //String humidity_node = databasePath + dht11_path + string_month + string_day + string_time; 
-      //String ground_humidity_node = databasePath + ground_humidity_path + string_month + string_day + string_time;
+      //String temperature_node = databasePath + dht11_path + "/temperature";
+      //String humidity_node = databasePath + dht11_path + "/humidity";
+      //String ground_humidity_node = databasePath + ground_humidity_path + "/ground_humidity";
+      String temperature_node = databasePath + dht11_path + string_month + string_day + string_time;  
+      String humidity_node = databasePath + dht11_path + string_month + string_day + string_time; 
+      String ground_humidity_node = databasePath + ground_humidity_path + string_month + string_day + string_time;
       if (Firebase.setJSON(fbdo, temperature_node.c_str(), temperature_json))
       {
           Serial.println("PATH: " + fbdo.dataPath());
@@ -257,7 +266,7 @@ void uploadSensorData() {
       }
       else
       {
-          Serial.println("FAILED");
+          Serial.println("FAILED, TEMPERATURE");
           Serial.println("REASON: " + fbdo.errorReason());
           Serial.println("------------------------------------");
           Serial.println();
@@ -272,7 +281,7 @@ void uploadSensorData() {
       }
       else
       {
-          Serial.println("FAILED");
+          Serial.println("FAILED HUMIDITY");
           Serial.println("REASON: " + fbdo.errorReason());
           Serial.println("------------------------------------");
           Serial.println();
@@ -287,7 +296,7 @@ void uploadSensorData() {
       }
       else
       {
-          Serial.println("FAILED");
+          Serial.println("FAILED GROUND HUMIDITY");
           Serial.println("REASON: " + fbdo.errorReason());
           Serial.println("------------------------------------");
           Serial.println();
