@@ -73,24 +73,31 @@ public class registro_activity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Se hace el registro del usuario  en firebase
+     */
     private void registeUser(){
         mAuth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
+                    //crea un mapa de objetso donde se guardan los datos que ingresa el usuario
                     Map<String, Object> map = new HashMap<>();
                     map.put("name", usuario);
                     map.put("email", email);
                     map.put("pass", pass);
-
+                    //genera un id para el usuario que se esta registrando
                     String id = mAuth.getCurrentUser().getUid();
+                    //se define la ruta donde se guardaran los datos del usuario
                     mDataBase.child("Users").child(id).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task2) {
                             if(task2.isSuccessful()){
+                                /*todo se realiza correctamente se cambia al layaut de login */
                                 startActivity(new Intent(registro_activity.this, loginActivity.class));
                                 finish();
                             }else {
+                                //si ocurre un error manda un mensaje para avisar al usuario
                                 Toast.makeText(registro_activity.this, "No se crearon lo datos correctamente", Toast.LENGTH_LONG).show();
                             }
                         }

@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     FirebaseAuth mAuth;
 
 
+
     private TextView horaText;
 
     private Spinner id_tipo;
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     private Handler handler = new Handler();
+
+
 
     private static final String TAG = "MainActivity"; // Define tu etiqueta de registro
 
@@ -102,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         name = FirebaseDatabase.getInstance().getReference().child("Users");
         String id = mAuth.getCurrentUser().getUid();
 
-
         handler.postDelayed(updateDateTimeRunnable, 1000);
 
         int[] dateTime = getCurrentDateTime();
@@ -122,11 +124,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
+        /**
+         *Funcion que nos permite conocer el nombre del usuario que hace login
+         */
         name.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Este método se llama una vez con el valor inicial y nuevamente
-
+                //se utiliza el id como referencia para encontrar el nombre del usuario
                 String value = dataSnapshot.child(id).child("name").getValue(String.class);
                 Log.d(TAG, "Value is: " + value);
                 userID.setText(value + "");
@@ -187,13 +192,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-
     }
+
+
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
 
 
     private Runnable updateDateTimeRunnable = new Runnable() {
@@ -212,7 +219,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             // Programar la próxima actualización del TextView
             handler.postDelayed(this, 1000); // Actualizar cada segundo
-
         }
     };
 
@@ -227,5 +233,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return new int[]{month, day, hour, minute, second};
 
     }
-
 }
+

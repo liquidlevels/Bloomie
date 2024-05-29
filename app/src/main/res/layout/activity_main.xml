@@ -61,10 +61,13 @@
         android:text="Cerrar Sesion"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.891"
+
+    =======
+        app:layout_constraintHorizontal_bias="0.942"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
+        app:layout_constraintVertical_bias="0.989" />
+>>>>>>> 7e2cc89b41ff48ee35f0a22db924eea3e964857b
 
     <TextView
         android:id="@+id/idUser"
@@ -81,14 +84,17 @@
 
     <TextView
         android:id="@+id/horaText"
-        android:layout_width="102dp"
-        android:layout_height="34dp"
+        android:layout_width="81dp"
+        android:layout_height="33dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.977"
+
+    =======
+        app:layout_constraintHorizontal_bias="0.99"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.053" />
+        app:layout_constraintVertical_bias="0.054" />
+>>>>>>> 7e2cc89b41ff48ee35f0a22db924eea3e964857b
 
     <Spinner
         android:id="@+id/id_tipo"
