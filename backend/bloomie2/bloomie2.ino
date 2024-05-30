@@ -28,6 +28,9 @@
 const unsigned long interval = 2000; //intervalo de tiempo para activar la bomba
 unsigned long previous_millis = 0;
 bool relay_state = LOW;
+bool turnOffScheduled = false;
+unsigned long turnOffInterval = 0;
+unsigned long relay_on_time = 0;
 
 // Initialize DHT sensor
 DHT dht(DHTPIN, DHTTYPE);
@@ -76,6 +79,7 @@ String fuid = "";
 unsigned long elapsed_millis = 0;
 
 // The frequency of sensor updates to firebase, set to 10seconds
+//unsigned long update_interval = 60000; //1 minute
 unsigned long update_interval = 10000;
 
 // Store device authentication status
@@ -142,13 +146,13 @@ void groundhumidity_init(){
 
   String jsonStr;
   ground_humidity_json.toString(jsonStr, true);
-  Serial.println(jsonStr);
+  //Serial.println(jsonStr);
 }
 
 void groundhumidity(){
   int analogValue = analogRead(GROUND_HUMIDITY_PIN);
   ground_humidity = analogValue;
-  Serial.println(ground_humidity);
+  //Serial.println(ground_humidity);
 }
 
 void getCurrentDate(){
@@ -178,38 +182,45 @@ void dhtt11_init(){
   // Print out initial temperature values
   String jsonStr;
   temperature_json.toString(jsonStr, true);
-  Serial.println(jsonStr);
+  //Serial.println(jsonStr);
   String jsonStr2;
   humidity_json.toString(jsonStr2, true);
-  Serial.println(jsonStr2);
+  //Serial.println(jsonStr2);
 }
 
-void turnOnRelay() {
+void turnOnRelayWithDelay(unsigned long delayTime) {
   relay_state = HIGH;
   digitalWrite(RELAY_PIN, relay_state);
-  previous_millis = millis(); //reset time
+  relay_on_time = millis(); //reset time
+  turnOffInterval = delayTime;
+  turnOffScheduled = true;
   Serial.println("Relay turned ON");
 }
 
+void turnOffRelay() {
+  relay_state = LOW;
+  digitalWrite(RELAY_PIN, relay_state);
+  turnOffScheduled = false; // reset the scheduled flag
+  Serial.println("Relay turned OFF");
+}
+
+//MIN_HUMIDITY 2459 //4095 - 1638
+//MAX_HUMIDITY 1638 //4095 - 2457
 void irrigationSystem(){
   groundhumidity();
   float current_humidity = ground_humidity;
-
-  if(current_humidity <= MIN_HUMIDITY){
+  if(current_humidity >= MIN_HUMIDITY){
     Serial.println("ta seco");
-    turnOnRelay();
-    unsigned long current_millis = millis();
-    // Comprueba si el relé debe estar encendido
-    if (relay_state == HIGH && current_millis - previous_millis >= interval) {
-      // El tiempo ha pasado, apaga el relé
-      relay_state = LOW;
-      digitalWrite(RELAY_PIN, relay_state);
-      Serial.println("Relay turned OFF");
-    }
-  } else if(current_humidity > MIN_HUMIDITY && current_humidity <= MAX_HUMIDITY){
+    Serial.println(current_humidity);
+    digitalWrite(RELAY_PIN, HIGH);
+  } else if(current_humidity < MIN_HUMIDITY && current_humidity >= MAX_HUMIDITY){
     Serial.println("ta bien");
-  } else if(current_humidity > MAX_HUMIDITY){
+    Serial.println(current_humidity);
+    digitalWrite(RELAY_PIN, LOW);
+  } else if(current_humidity < MAX_HUMIDITY){
     Serial.println("noo, ta muy humedo, se pueden podrir mis raices:c");
+    Serial.println(current_humidity);
+    digitalWrite(RELAY_PIN, LOW);
   } else {
     Serial.println("algo anda mal con el sistema de riego");
   }
@@ -262,23 +273,28 @@ void updateSensorReadings(){
 }
 
 void uploadSensorData() {
+  
+  //if (turnOffScheduled && millis() - relay_on_time >= turnOffInterval) {
+    //turnOffRelay();
+  //}
+
   if (millis() - elapsed_millis > update_interval && isAuthenticated && Firebase.ready())
     {
       elapsed_millis = millis();
-
+      
       updateSensorReadings();
-      String temperature_realtime_node = databasePath + "/dht11_realtime" + "/temperature";
-      String humidity_realtime_node = databasePath + "dht11_realtime" + "/humidity";
-      String ground_humidity_realtime_node = databasePath + "dht11_realtime" + "/ground_humidity";
+      //String temperature_realtime_node = databasePath + "/dht11_realtime" + "/temperature";
+      //String humidity_realtime_node = databasePath + "dht11_realtime" + "/humidity";
+      //String ground_humidity_realtime_node = databasePath + "dht11_realtime" + "/ground_humidity";
       String temperature_node = databasePath + dht11_path + string_month + string_day + string_time + "/temperature";  
       String humidity_node = databasePath + dht11_path + string_month + string_day + string_time + "/humidity"; 
       String ground_humidity_node = databasePath + ground_humidity_path + string_month + string_day + string_time + "/ground_humidity";
       if (Firebase.setJSON(fbdo, temperature_node.c_str(), temperature_json))
-      {
+      {/*
           Serial.println("PATH: " + fbdo.dataPath());
           Serial.print("VALUE: ");
           printResult(fbdo); //see addons/RTDBHelper.h
-          Serial.println();
+          Serial.println();*/
       }
       else
       {
@@ -289,11 +305,11 @@ void uploadSensorData() {
       }
 
       if (Firebase.setJSON(fbdo, humidity_node.c_str(), humidity_json))
-      {
+      {/*
           Serial.println("PATH: " + fbdo.dataPath());
           Serial.print("VALUE: ");
           printResult(fbdo); //see addons/RTDBHelper.h
-          Serial.println();
+          Serial.println();*/
       }
       else
       {
@@ -304,11 +320,11 @@ void uploadSensorData() {
       }
       
       if(Firebase.setJSON(fbdo,ground_humidity_node.c_str(), ground_humidity_json)){
-        Serial.println("PATH: " + fbdo.dataPath());
+        /*Serial.println("PATH: " + fbdo.dataPath());
         Serial.print("VALUE: ");
         printResult(fbdo); //see addons/RTDBHelper.h
         Serial.println("------------------------------------");
-        Serial.println();
+        Serial.println();*/
       }
       else
       {
